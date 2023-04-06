@@ -151,9 +151,17 @@ def show_exam_result(request, course_id, submission_id):
     for choice in choices:
         if choice.is_correct:
             total_score += choice.question.grade
+    maxGrade = 0
+    for question in course.question_set.all():
+        for choice in question.choice_set.all():
+            if choice.is_correct:
+                maxGrade += question.grade
+
     context['course'] = course
     context['grade'] = total_score
     context['choices'] = choices
+    context['maxGrade'] = maxGrade
+    context['gradePercentage'] = total_score / maxGrade * 100
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)   
 
 
